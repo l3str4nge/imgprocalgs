@@ -20,8 +20,7 @@ class NearestNeigbhour:
         self.new_image = None
 
     def process(self):
-        xsrc, ysrc = self.image.size[1], self.image.size[0]
-        print(xsrc, ysrc)
+        xsrc, ysrc = self.image.size[0], self.image.size[1]
         xdest, ydest = int(xsrc * self.scale), int(ysrc * self.scale)
         ratio_x, ratio_y = xsrc / xdest, ysrc / ydest
 
@@ -29,12 +28,9 @@ class NearestNeigbhour:
         new_image_pixels = self.new_image.load()
         for x in range(xdest - 1):
             for y in range(ydest - 1):
-                try:
-                    new_img_x, new_img_y = int(x * ratio_x), int(y * ratio_y)
-                    new_image_pixels[x, y] = self.pixels[new_img_y, new_img_x]
+                new_img_x, new_img_y = int(x * ratio_x), int(y * ratio_y)
+                new_image_pixels[x, y] = self.pixels[new_img_x, new_img_y]
 
-                except Exception as e:
-                    print("Catched")
         self.new_image.save("test.png")
 
 
