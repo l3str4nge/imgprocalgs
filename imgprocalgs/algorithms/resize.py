@@ -3,6 +3,7 @@ Own implementation of resize algorithms - just for practice.
 Testing with Pillow
 """
 import abc
+import math
 
 from PIL import Image
 
@@ -33,8 +34,6 @@ class ImageResizer(metaclass=abc.ABCMeta):
         return Image.new("RGB", (widht, height), "#000000")
 
 
-
-
 class NearestNeigbhour(ImageResizer):
     """
     Nearest neighbour algorithm
@@ -58,7 +57,7 @@ class NearestNeigbhour(ImageResizer):
                 new_img_x, new_img_y = int(x * ratio_x), int(y * ratio_y)
                 new_image_pixels[x, y] = self.image_loader.pixels[new_img_x, new_img_y]
 
-        self.new_image.save("test.png")
+        self.new_image.save("test_nearestneigh.jpg")
 
 
 class BilinearInterpolation(ImageResizer):
@@ -69,8 +68,35 @@ class BilinearInterpolation(ImageResizer):
         super().__init__()
         self.image_loader: ImageLoader = ImageLoader(image_path)
         self.image_path = image_path
+        self.pixels = self.image_loader.pixels
         self.scale = scale
         self.new_image = None
+
+        self.neigh1 = None
+        self.neigh2 = None
+        self.neigh3 = None
+        self.neigh4 = None
+
+    class Neighbour:
+        """
+        Nearest neighbour representation
+        """
+        def __init__(self, x, y, rgb):
+            self.x = x
+            self.y = y
+            self.rgb = rgb
+
+        @property
+        def red(self):
+            return self.rgb[0]
+
+        @property
+        def green(self):
+            return self.rgb[1]
+
+        @property
+        def blue(self):
+            return self.rgb[2]
 
     def process(self):
         x_src, y_src = self.image_loader.get_size()
@@ -80,23 +106,30 @@ class BilinearInterpolation(ImageResizer):
         self.new_image = self.get_new_image(x_dest, y_dest)
         dest_pixels = self.new_image.load()
 
-        for x in range(x_dest - 1):
-            for y in range(y_dest - 1):
-                neigh_1 = self.image_loader.pixels[x-1, y]
-                neigh_2 = self.image_loader.pixels[x + 1, y]
-                neigh_3 = self.image_loader.pixels[x, y + 1]
-                neigh_4 = self.image_loader.pixels[x, y - 1]
+        for x in range(x_dest):
+            for y in range(y_dest):
+                x0 = float(x * ratio_x)
+                y0 = float(y * ratio_y)
 
-                # TODO: how to handle edges?
-                print(neigh_1, neigh_2, neigh_3, neigh_4)
+                x1, y1 = math.floor(x0), math.floor(y0)
+                x2, y2 = math.ceil(x0), math.ceil(y0)
 
-        self.new_image.save("test.png")
+                if y2 == y_src: y2 = y0
+                if x2 == x_src: x2 = x0
 
+                dx, dy = x0 - x1, y0 - y1
+                # TODO: something is bad with x - y combination below in interpolation calc
+                self.neigh1 = self.Neighbour(x1, y1, self.pixels[x1, y1])
+                self.neigh2 = self.Neighbour(x2, y2, self.pixels[x2, y2])
+                self.neigh3 = self.Neighbour(x1, y2, self.pixels[x1, y2])
+                self.neigh4 = self.Neighbour(x2, y1, self.pixels[x2, y1])
 
+                """ Bilinear Interpolation
+                    source: https://en.wikipedia.org/wiki/Bilinear_interpolation
+                 """
+                red = (1 - dy) * (1 - dx) * self.neigh1.red + dx * self.neigh2.red + (1 - dx) * self.neigh3.red + dx * self.neigh3.red
+                green = (1 - dy) * (1 - dx) * self.neigh1.green + dx * self.neigh2.green + (1 - dx) * self.neigh3.green + dx * self.neigh3.green
+                blue = (1 - dy) * (1 - dx) * self.neigh1.blue + dx * self.neigh2.blue + (1 - dx) * self.neigh3.blue + dx * self.neigh3.blue
+                dest_pixels[x, y] = (int(red), int(green), int(blue))
 
-
-
-
-
-
-
+        self.new_image.save("test_bilinear.jpg")
