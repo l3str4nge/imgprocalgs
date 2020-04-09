@@ -1,7 +1,7 @@
 from unittest import TestCase
 from imgprocalgs.algorithms import resize
 
-
+#TODO: more tests
 class TestNearestNeighbour(TestCase):
     def test_resize(self):
         algos = resize.NearestNeigbhour('data/desert.jpg', 2)

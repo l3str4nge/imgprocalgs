@@ -118,18 +118,17 @@ class BilinearInterpolation(ImageResizer):
                 if x2 == x_src: x2 = x0
 
                 dx, dy = x0 - x1, y0 - y1
-                # TODO: something is bad with x - y combination below in interpolation calc
                 self.neigh1 = self.Neighbour(x1, y1, self.pixels[x1, y1])
-                self.neigh2 = self.Neighbour(x2, y2, self.pixels[x2, y2])
+                self.neigh2 = self.Neighbour(x2, y1, self.pixels[x2, y1])
                 self.neigh3 = self.Neighbour(x1, y2, self.pixels[x1, y2])
-                self.neigh4 = self.Neighbour(x2, y1, self.pixels[x2, y1])
+                self.neigh4 = self.Neighbour(x2, y2, self.pixels[x2, y2])
 
                 """ Bilinear Interpolation
                     source: https://en.wikipedia.org/wiki/Bilinear_interpolation
                  """
-                red = (1 - dy) * (1 - dx) * self.neigh1.red + dx * self.neigh2.red + (1 - dx) * self.neigh3.red + dx * self.neigh3.red
-                green = (1 - dy) * (1 - dx) * self.neigh1.green + dx * self.neigh2.green + (1 - dx) * self.neigh3.green + dx * self.neigh3.green
-                blue = (1 - dy) * (1 - dx) * self.neigh1.blue + dx * self.neigh2.blue + (1 - dx) * self.neigh3.blue + dx * self.neigh3.blue
+                red = (1 - dy) * (1 - dx) * self.neigh1.red + (1-dy) * dx * self.neigh2.red + (1 - dx) * dy * self.neigh3.red + dx * dy * self.neigh4.red
+                green = (1 - dy) * (1 - dx) * self.neigh1.green + (1 - dy) * dx * self.neigh2.green + (1 - dx) * dy * self.neigh3.green + dx * dy * self.neigh4.green
+                blue = (1 - dy) * (1 - dx) * self.neigh1.blue + (1 - dy) * dx * self.neigh2.blue + (1 - dx) * dy * self.neigh3.blue + dx * dy * self.neigh4.blue
                 dest_pixels[x, y] = (int(red), int(green), int(blue))
 
         self.new_image.save("test_bilinear.jpg")
