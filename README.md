@@ -1,4 +1,10 @@
 ### imgprocalgs
+
+<p align="center">
+   <img src="https://travis-ci.com/mateuszz0000/imgprocalgs.svg?branch=master"/>
+</p>
+
+
 Collection of common image processing algorithms.
 
 Implemented so far:
