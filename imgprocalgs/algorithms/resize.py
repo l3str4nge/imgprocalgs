@@ -132,3 +132,33 @@ class BilinearInterpolation(ImageResizer):
                 dest_pixels[x, y] = (int(red), int(green), int(blue))
 
         self.new_image.save("test_bilinear.jpg")
+
+
+class BicubicInterpolation(ImageResizer):
+    """
+    Bicubic interpolation algorithm
+    """
+    A = -0.75
+
+    def __init__(self, image_path: str, scale: float):
+        super().__init__()
+        self.image_loader: ImageLoader = ImageLoader(image_path)
+        self.image_path = image_path
+        self.pixels = self.image_loader.pixels
+        self.scale = scale
+        self.new_image = None
+
+        self.neighbours = []  # list for 4x4 neighbourhood
+
+    def process(self):
+        """
+        Implementing coefficients - inspired by openCV project
+        const float A = -0.75f;
+        """
+
+    def get_coefficients(self, x):
+        first = ((self.A*(x + 1) - 5*self.A)*(x + 1) + 8*self.A)*(x + 1) - 4*self.A
+        second = ((self.A + 2)*x - (self.A + 3))*x*x + 1
+        third = ((self.A + 2)*(1 - x) - (self.A + 3))*(1 - x)*(1 - x) + 1
+        fourth = 1.0 - first - second - third
+        return first, second, third, fourth

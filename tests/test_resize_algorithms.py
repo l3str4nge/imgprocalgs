@@ -20,3 +20,13 @@ class TestBilinearInterpolation(TestCase):
     def test_resize_bird(self):
         algos = resize.BilinearInterpolation('tests/data/bird.jpg', 4)
         algos.process()
+
+
+class TestBicubicInterpolation(TestCase):
+    def test_coeficient(self):
+        algo = resize.BicubicInterpolation('tests/data/bird.jpg', 4)
+        cofs = algo.get_coefficients(10)
+        self.assertEqual(-607.5, cofs[0])
+        self.assertEqual(1026.0,  cofs[1])
+        self.assertEqual(-1092.5, cofs[2])
+        self.assertEqual(675.0, cofs[3])
