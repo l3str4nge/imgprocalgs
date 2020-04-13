@@ -30,3 +30,7 @@ class TestBicubicInterpolation(TestCase):
         self.assertEqual(1026.0,  cofs[1])
         self.assertEqual(-1092.5, cofs[2])
         self.assertEqual(675.0, cofs[3])
+
+    def test_resize(self):
+        algos = resize.BicubicInterpolation('tests/data/bird.jpg', 2)
+        algos.process()

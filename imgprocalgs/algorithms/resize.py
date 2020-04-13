@@ -60,6 +60,31 @@ class NearestNeigbhour(ImageResizer):
         self.new_image.save("test_nearestneigh.jpg")
 
 
+class Neighbour:
+    """
+    Nearest neighbour representation
+    """
+    def __init__(self, x, y, rgb):
+        self.x = x
+        self.y = y
+        self.rgb = rgb
+
+    @property
+    def red(self):
+        return self.rgb[0]
+
+    @property
+    def green(self):
+        return self.rgb[1]
+
+    @property
+    def blue(self):
+        return self.rgb[2]
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+
 class BilinearInterpolation(ImageResizer):
     """
     Bilinear interpolation algorithm
@@ -76,27 +101,6 @@ class BilinearInterpolation(ImageResizer):
         self.neigh2 = None
         self.neigh3 = None
         self.neigh4 = None
-
-    class Neighbour:
-        """
-        Nearest neighbour representation
-        """
-        def __init__(self, x, y, rgb):
-            self.x = x
-            self.y = y
-            self.rgb = rgb
-
-        @property
-        def red(self):
-            return self.rgb[0]
-
-        @property
-        def green(self):
-            return self.rgb[1]
-
-        @property
-        def blue(self):
-            return self.rgb[2]
 
     def process(self):
         x_src, y_src = self.image_loader.get_size()
@@ -118,10 +122,10 @@ class BilinearInterpolation(ImageResizer):
                 if x2 == x_src: x2 = x0
 
                 dx, dy = x0 - x1, y0 - y1
-                self.neigh1 = self.Neighbour(x1, y1, self.pixels[x1, y1])
-                self.neigh2 = self.Neighbour(x2, y1, self.pixels[x2, y1])
-                self.neigh3 = self.Neighbour(x1, y2, self.pixels[x1, y2])
-                self.neigh4 = self.Neighbour(x2, y2, self.pixels[x2, y2])
+                self.neigh1 = Neighbour(x1, y1, self.pixels[x1, y1])
+                self.neigh2 = Neighbour(x2, y1, self.pixels[x2, y1])
+                self.neigh3 = Neighbour(x1, y2, self.pixels[x1, y2])
+                self.neigh4 = Neighbour(x2, y2, self.pixels[x2, y2])
 
                 """ Bilinear Interpolation
                     source: https://en.wikipedia.org/wiki/Bilinear_interpolation
@@ -149,12 +153,62 @@ class BicubicInterpolation(ImageResizer):
         self.new_image = None
 
         self.neighbours = []  # list for 4x4 neighbourhood
+        self.x_coofs = None
+        self.y_coofs = None
 
     def process(self):
         """
         Implementing coefficients - inspired by openCV project
         const float A = -0.75f;
         """
+        x_src, y_src = self.image_loader.get_size()
+        x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
+        ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
+
+        self.new_image = self.get_new_image(x_dest, y_dest)
+        dest_pixels = self.new_image.load()
+
+        for x in range(x_dest):
+            for y in range(y_dest):
+                x0 = float(x * ratio_x)
+                y0 = float(y * ratio_y)
+
+                x1, y1 = math.floor(x0), math.floor(y0)
+                x2, y2 = math.ceil(x0), math.ceil(y0)
+
+                if y2 == y_src: y2 = y0
+                if x2 == x_src: x2 = x0
+
+                dx, dy = x0 - x1, y0 - y1
+                self.x_coofs, self.y_coofs = self.get_coefficients(dx), self.get_coefficients(dy)
+
+                # padding input image and select neighbours in 4x4 neighbourhood
+                self.neighbours = []
+                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
+
+                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
+
+                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
+
+                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
+
+                #  main interpolation
+                red, green, blue = self._interpolate('red'), self._interpolate('green'), self._interpolate('blue')
+                dest_pixels[x, y] = (int(red), int(green), int(blue))
+
+        self.new_image.save("test_biubic.jpg")
 
     def get_coefficients(self, x):
         first = ((self.A*(x + 1) - 5*self.A)*(x + 1) + 8*self.A)*(x + 1) - 4*self.A
@@ -162,3 +216,13 @@ class BicubicInterpolation(ImageResizer):
         third = ((self.A + 2)*(1 - x) - (self.A + 3))*(1 - x)*(1 - x) + 1
         fourth = 1.0 - first - second - third
         return first, second, third, fourth
+
+    def _interpolate(self, key):
+        a, b, c, d = self.x_coofs
+        e, f, g, h = self.y_coofs
+
+        xr1 = a * self.neighbours[0][key] + b * self.neighbours[4][key] + c * self.neighbours[8][key] + d * self.neighbours[12][key]
+        xr2 = a * self.neighbours[1][key] + b * self.neighbours[5][key] + c * self.neighbours[9][key] + d * self.neighbours[13][key]
+        xr3 = a * self.neighbours[2][key] + b * self.neighbours[6][key] + c * self.neighbours[10][key] + d * self.neighbours[14][key]
+        xr4 = a * self.neighbours[3][key] + b * self.neighbours[7][key] + c * self.neighbours[11][key] + d * self.neighbours[15][key]
+        return e * xr1 + f * xr2 + g * xr3 + h * xr4
