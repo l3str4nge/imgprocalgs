@@ -13,4 +13,5 @@ Implemented so far:
 * resizing algorithms:
     * Nearest neighbour (https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm)
     * Bilinear interpolation (https://en.wikipedia.org/wiki/Bilinear_interpolation)
+    * Bicubic interpolation (https://en.wikipedia.org/wiki/Bicubic_interpolation)
     
