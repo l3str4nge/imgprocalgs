@@ -5,16 +5,14 @@ Testing with Pillow
 import abc
 import math
 
-from PIL import Image
+from PIL import Image as PillowImage
 
 
-class ImageLoader:
-    """
-    CLass responsible for image loading
-    """
+class Image:
+    """ Wrapper for Image class for easier usage"""
     def __init__(self, image_path: str):
         self.image_path = image_path
-        self.image: Image = Image.open(self.image_path)
+        self.image: PillowImage = PillowImage.open(self.image_path)
         self.pixels = self.image.load()
 
     def get_size(self):
@@ -25,13 +23,18 @@ class ImageLoader:
 
 
 class ImageResizer(metaclass=abc.ABCMeta):
+    """ Base class of resizing algorithms """
+    def __init__(self, image_path: str, scale: float):
+        self.image = Image(image_path)
+        self.scale = scale
+        self.new_image = None
 
     @abc.abstractmethod
     def process(self):
         pass
 
     def get_new_image(self, widht, height):
-        return Image.new("RGB", (widht, height), "#000000")
+        return PillowImage.new("RGB", (widht, height), "#000000")
 
 
 class NearestNeigbhour(ImageResizer):
@@ -39,23 +42,17 @@ class NearestNeigbhour(ImageResizer):
     Nearest neighbour algorithm
     """
 
-    def __init__(self, image_path: str, scale: float):
-        self.image_loader: ImageLoader = ImageLoader(image_path)
-        self.image_path = image_path
-        self.scale = scale
-        self.new_image = None
-
     def process(self):
-        x_src, y_src = self.image_loader.image.size[0], self.image_loader.image.size[1]
+        x_src, y_src = self.image.get_size()
         x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
         ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
 
-        self.new_image = Image.new("RGB", (x_dest, y_dest), "#000000")
+        self.new_image = PillowImage.new("RGB", (x_dest, y_dest), "#000000")
         new_image_pixels = self.new_image.load()
         for x in range(x_dest - 1):
             for y in range(y_dest - 1):
                 new_img_x, new_img_y = int(x * ratio_x), int(y * ratio_y)
-                new_image_pixels[x, y] = self.image_loader.pixels[new_img_x, new_img_y]
+                new_image_pixels[x, y] = self.image.pixels[new_img_x, new_img_y]
 
         self.new_image.save("test_nearestneigh.jpg")
 
@@ -90,20 +87,14 @@ class BilinearInterpolation(ImageResizer):
     Bilinear interpolation algorithm
     """
     def __init__(self, image_path: str, scale: float):
-        super().__init__()
-        self.image_loader: ImageLoader = ImageLoader(image_path)
-        self.image_path = image_path
-        self.pixels = self.image_loader.pixels
-        self.scale = scale
-        self.new_image = None
-
+        super().__init__(image_path, scale)
         self.neigh1 = None
         self.neigh2 = None
         self.neigh3 = None
         self.neigh4 = None
 
     def process(self):
-        x_src, y_src = self.image_loader.get_size()
+        x_src, y_src = self.image.get_size()
         x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
         ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
 
@@ -122,10 +113,10 @@ class BilinearInterpolation(ImageResizer):
                 if x2 == x_src: x2 = x0
 
                 dx, dy = x0 - x1, y0 - y1
-                self.neigh1 = Neighbour(x1, y1, self.pixels[x1, y1])
-                self.neigh2 = Neighbour(x2, y1, self.pixels[x2, y1])
-                self.neigh3 = Neighbour(x1, y2, self.pixels[x1, y2])
-                self.neigh4 = Neighbour(x2, y2, self.pixels[x2, y2])
+                self.neigh1 = Neighbour(x1, y1, self.image.pixels[x1, y1])
+                self.neigh2 = Neighbour(x2, y1, self.image.pixels[x2, y1])
+                self.neigh3 = Neighbour(x1, y2, self.image.pixels[x1, y2])
+                self.neigh4 = Neighbour(x2, y2, self.image.pixels[x2, y2])
 
                 """ Bilinear Interpolation
                     source: https://en.wikipedia.org/wiki/Bilinear_interpolation
@@ -145,12 +136,7 @@ class BicubicInterpolation(ImageResizer):
     A = -0.75
 
     def __init__(self, image_path: str, scale: float):
-        super().__init__()
-        self.image_loader: ImageLoader = ImageLoader(image_path)
-        self.image_path = image_path
-        self.pixels = self.image_loader.pixels
-        self.scale = scale
-        self.new_image = None
+        super().__init__(image_path, scale)
 
         self.neighbours = []  # list for 4x4 neighbourhood
         self.x_coofs = None
@@ -161,7 +147,7 @@ class BicubicInterpolation(ImageResizer):
         Implementing coefficients - inspired by openCV project
         const float A = -0.75f;
         """
-        x_src, y_src = self.image_loader.get_size()
+        x_src, y_src = self.image.get_size()
         x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
         ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
 
@@ -184,25 +170,25 @@ class BicubicInterpolation(ImageResizer):
 
                 # padding input image and select neighbours in 4x4 neighbourhood
                 self.neighbours = []
-                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
-                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
-                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
-                self.neighbours.append(Neighbour(x1, y1, self.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.image.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.image.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.image.pixels[x1, y1]))
+                self.neighbours.append(Neighbour(x1, y1, self.image.pixels[x1, y1]))
 
-                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
-                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
-                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
-                self.neighbours.append(Neighbour(x2, y1, self.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.image.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.image.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.image.pixels[x2, y1]))
+                self.neighbours.append(Neighbour(x2, y1, self.image.pixels[x2, y1]))
 
-                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
-                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
-                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
-                self.neighbours.append(Neighbour(x1, y2, self.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.image.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.image.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.image.pixels[x1, y2]))
+                self.neighbours.append(Neighbour(x1, y2, self.image.pixels[x1, y2]))
 
-                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
-                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
-                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
-                self.neighbours.append(Neighbour(x2, y2, self.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.image.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.image.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.image.pixels[x2, y2]))
+                self.neighbours.append(Neighbour(x2, y2, self.image.pixels[x2, y2]))
 
                 #  main interpolation
                 red, green, blue = self._interpolate('red'), self._interpolate('green'), self._interpolate('blue')
