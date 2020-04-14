@@ -12,11 +12,12 @@
 
 
 
-Collection of common image processing algorithms.
+Collection of common image processing algorithms. This project aims to learn algorithms by coding them from scratch. 
 
 Implemented so far:
 * resizing algorithms:
     * Nearest neighbour (https://en.wikipedia.org/wiki/Nearest_neighbour_algorithm)
     * Bilinear interpolation (https://en.wikipedia.org/wiki/Bilinear_interpolation)
     * Bicubic interpolation (https://en.wikipedia.org/wiki/Bicubic_interpolation)
-    
+* other:
+    * negative (https://en.wikipedia.org/wiki/Negative_(photography))
