@@ -14,3 +14,7 @@ class Image:
         :return: x, y in pixels
         """
         return self.image.size[0], self.image.size[1]
+
+
+def create_empty_image(width: int, height: int) -> PillowImage:
+    return PillowImage.new("RGB", (width, height), "#000000")
