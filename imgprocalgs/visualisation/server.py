@@ -1,25 +1,49 @@
+""" Flask application definition for algorithm visualisation"""
+
 import threading
 import webbrowser
 
-from flask import Flask, render_template
+from flask import Flask
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def main_page():
-    return render_template('main_page.html')
+from imgprocalgs.visualisation.views import TemplateView
 
 
-def run_server(host: str, port: int):
-    app.run(host, port)
+class App:
+    """"
+    Application reprentation
 
+    Simple usage in this project:
 
-def open_website(url):
-    webbrowser.get(using='windows-default').open(url)
+    1. Run one of available algorithm with visualisation option
+    2. Put following code:
+    >>> app = App()
+    >>> app.register_route(path="/", **{})
+    >>> app.run_server('host', 8000, open_website=True or False)
+    """
+
+    DEFAULT_BROWSER = 'windows-default'
+    STATIC_FOLDER = "/data"
+    STATIC_URL = "/data"
+
+    def __init__(self):
+        self.app = Flask(__name__, static_folder=self.STATIC_FOLDER, static_url_path=self.STATIC_URL)
+        self.routes = []
+
+    def run_server(self, host: str, port: int, open_webiste=False):
+        if open_webiste:
+            threading.Timer(0.25, self.open_website, [f"http://{host}:{port}"]).start()
+
+        self.app.run(host, port)
+
+    def open_website(self, url):
+        webbrowser.get(using=self.DEFAULT_BROWSER).open(url)
+
+    def register_route(self, path: str, template_name: str, **kwargs):
+        route = TemplateView(template_name, **kwargs)
+        self.app.route(path)(route.as_view)
 
 
 if __name__ == '__main__':
-    _host, _port = "127.0.0.1", 8000
-    threading.Timer(0.25, open_website, [f"http://{_host}:{_port}"]).start()
-    run_server(_host, _port)
+    app = App()
+    app.register_route("/", template_name='main_page.html', title="Main title2", header="Main header")
+    app.run_server("127.0.0.1", 8000, open_webiste=True)

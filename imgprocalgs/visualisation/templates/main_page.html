@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Here should be name of algorithm</title>
+    <title>{{ title }}</title>
 </head>
 <body>
-
+    <h1>{{ header }}</h1>
+    {% for data in image_data %}
+    <div>
+        <h1>{{ data.header }}</h1>
+        <img src="{{url_for('static', filename=data.image)}}" align="middle" />
+    </div>
+    {% endfor %}
 </body>
 </html>

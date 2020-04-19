@@ -1,4 +1,7 @@
+from flask import url_for
+
 from imgprocalgs.utilities import Image, create_empty_image
+from imgprocalgs.visualisation.server import App
 
 OUTPUT_FILENAME = "sepia.jpg"
 
@@ -22,3 +25,18 @@ def make_sepia(image_path: str, factor: int):
 
 def get_greyscale(red, green, blue):
     return 0.2126 * red + 0.587 * green + 0.114 * blue
+
+
+if __name__ == "__main__":
+    from collections import namedtuple
+    img_data = namedtuple('ÍmgData', 'header image')
+    make_sepia('tests/data/desert.jpg', 30)
+    data = {
+        "title": "Sepia algorithm",
+        "header": "Sepia with different factors",
+        "image_data": [img_data("Factor: 30", "sepia.jpg")]
+    }
+
+    app = App()
+    app.register_route("/", template_name="main_page.html", **data)
+    app.run_server("127.0.0.1", 8001, open_webiste=True)
