@@ -2,7 +2,7 @@
 
 import threading
 import webbrowser
-
+import os
 from flask import Flask
 
 from imgprocalgs.visualisation.views import TemplateView
@@ -22,7 +22,7 @@ class App:
     """
 
     DEFAULT_BROWSER = 'windows-default'
-    STATIC_FOLDER = "/data"
+    STATIC_FOLDER = os.path.join(os.path.abspath(os.curdir), 'data')
     STATIC_URL = "/data"
 
     def __init__(self):
