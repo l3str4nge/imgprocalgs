@@ -6,7 +6,7 @@ from imgprocalgs.visualisation.server import App
 OUTPUT_FILENAME = "sepia.jpg"
 
 
-def make_sepia(image_path: str, factor: int):
+def make_sepia(image_path: str, dest_path: str, factor: int):
     image = Image(image_path)
     width, height = image.get_size()
     output = create_empty_image(width, height)
@@ -20,7 +20,7 @@ def make_sepia(image_path: str, factor: int):
 
             output_pixels[x, y] = (grey_red + 2 * factor, grey_green + factor, grey_blue)
 
-    output.save(OUTPUT_FILENAME)
+    output.save(dest_path)
 
 
 def get_greyscale(red, green, blue):
@@ -30,7 +30,7 @@ def get_greyscale(red, green, blue):
 if __name__ == "__main__":
     from collections import namedtuple
     img_data = namedtuple('ÍmgData', 'header image')
-    make_sepia('tests/data/desert.jpg', 30)
+    make_sepia('tests/data/desert.jpg', 'data/desert_sepia.jpg', 30)
     data = {
         "title": "Sepia algorithm",
         "header": "Sepia with different factors",

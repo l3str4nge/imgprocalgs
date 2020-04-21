@@ -16,7 +16,7 @@ class ImageResizer(metaclass=abc.ABCMeta):
         self.new_image = None
 
     @abc.abstractmethod
-    def process(self):
+    def process(self, dest_path: str):
         pass
 
     def get_new_image(self, widht, height):
@@ -28,7 +28,7 @@ class NearestNeigbhour(ImageResizer):
     Nearest neighbour algorithm
     """
 
-    def process(self):
+    def process(self, dest_path: str):
         x_src, y_src = self.image.get_size()
         x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
         ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
@@ -40,7 +40,7 @@ class NearestNeigbhour(ImageResizer):
                 new_img_x, new_img_y = int(x * ratio_x), int(y * ratio_y)
                 new_image_pixels[x, y] = self.image.pixels[new_img_x, new_img_y]
 
-        self.new_image.save("test_nearestneigh.jpg")
+        self.new_image.save(dest_path)
 
 
 class Neighbour:
@@ -79,7 +79,7 @@ class BilinearInterpolation(ImageResizer):
         self.neigh3 = None
         self.neigh4 = None
 
-    def process(self):
+    def process(self, dest_path: str):
         x_src, y_src = self.image.get_size()
         x_dest, y_dest = int(x_src * self.scale), int(y_src * self.scale)
         ratio_x, ratio_y = x_src / x_dest, y_src / y_dest
@@ -112,7 +112,7 @@ class BilinearInterpolation(ImageResizer):
                 blue = (1 - dy) * (1 - dx) * self.neigh1.blue + (1 - dy) * dx * self.neigh2.blue + (1 - dx) * dy * self.neigh3.blue + dx * dy * self.neigh4.blue
                 dest_pixels[x, y] = (int(red), int(green), int(blue))
 
-        self.new_image.save("test_bilinear.jpg")
+        self.new_image.save(dest_path)
 
 
 class BicubicInterpolation(ImageResizer):
@@ -128,7 +128,7 @@ class BicubicInterpolation(ImageResizer):
         self.x_coofs = None
         self.y_coofs = None
 
-    def process(self):
+    def process(self, dest_path: str):
         """
         Implementing coefficients - inspired by openCV project
         const float A = -0.75f;
@@ -180,7 +180,7 @@ class BicubicInterpolation(ImageResizer):
                 red, green, blue = self._interpolate('red'), self._interpolate('green'), self._interpolate('blue')
                 dest_pixels[x, y] = (int(red), int(green), int(blue))
 
-        self.new_image.save("test_biubic.jpg")
+        self.new_image.save(dest_path)
 
     def get_coefficients(self, x):
         first = ((self.A*(x + 1) - 5*self.A)*(x + 1) + 8*self.A)*(x + 1) - 4*self.A
