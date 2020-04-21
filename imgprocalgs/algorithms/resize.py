@@ -5,7 +5,7 @@ Testing with Pillow
 import abc
 import math
 from PIL import Image as PillowImage
-from imgprocalgs.utilities import Image
+from imgprocalgs.algorithms.utilities import Image
 
 
 class ImageResizer(metaclass=abc.ABCMeta):

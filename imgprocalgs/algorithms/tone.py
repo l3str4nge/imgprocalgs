@@ -1,6 +1,4 @@
-from flask import url_for
-
-from imgprocalgs.utilities import Image, create_empty_image
+from imgprocalgs.algorithms.utilities import Image, create_empty_image
 from imgprocalgs.visualisation.server import App
 
 OUTPUT_FILENAME = "sepia.jpg"

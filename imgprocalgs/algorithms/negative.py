@@ -1,4 +1,4 @@
-from imgprocalgs.utilities import Image, create_empty_image
+from imgprocalgs.algorithms.utilities import Image, create_empty_image
 
 OUTPUT_FILENAME = "negative.jpg"
 
