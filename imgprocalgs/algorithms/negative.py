@@ -14,6 +14,3 @@ def make_negative(image_path: str, dest_path: str):
             output_pixels[x, y] = (255 - red, 255 - green, 255 - blue)
 
     output.save(dest_path)
-
-
-
