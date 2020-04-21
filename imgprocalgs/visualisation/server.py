@@ -10,7 +10,7 @@ from imgprocalgs.visualisation.views import TemplateView
 
 class App:
     """"
-    Application reprentation
+    Application representation
 
     Simple usage in this project:
 
