@@ -4,8 +4,10 @@ Testing with Pillow
 """
 import abc
 import math
+import functools
 from PIL import Image as PillowImage
-from imgprocalgs.algorithms.utilities import Image
+from imgprocalgs.algorithms.utilities import Image, ImageData
+from imgprocalgs.visualisation.server import App
 
 
 class ImageResizer(metaclass=abc.ABCMeta):
@@ -198,3 +200,61 @@ class BicubicInterpolation(ImageResizer):
         xr3 = a * self.neighbours[2][key] + b * self.neighbours[6][key] + c * self.neighbours[10][key] + d * self.neighbours[14][key]
         xr4 = a * self.neighbours[3][key] + b * self.neighbours[7][key] + c * self.neighbours[11][key] + d * self.neighbours[15][key]
         return e * xr1 + f * xr2 + g * xr3 + h * xr4
+
+
+neigbhour_2 = functools.partial(NearestNeigbhour.process, NearestNeigbhour("tests/data/bird.jpg", 2), "data/n_2.jpg")
+neigbhour_4 = functools.partial(NearestNeigbhour.process, NearestNeigbhour("tests/data/bird.jpg", 4), "data/n_4.jpg")
+
+bilinear_2 = functools.partial(BilinearInterpolation.process, BilinearInterpolation("tests/data/bird.jpg", 2), "data/bl_2.jpg")
+bilinear_4 = functools.partial(BilinearInterpolation.process, BilinearInterpolation("tests/data/bird.jpg", 4), "data/bl_4.jpg")
+
+bicubic_2 = functools.partial(BicubicInterpolation.process, BicubicInterpolation("tests/data/bird.jpg", 2), "data/bc_2.jpg")
+bicubic_4 = functools.partial(BicubicInterpolation.process, BicubicInterpolation("tests/data/bird.jpg", 4), "data/bc_4.jpg")
+
+
+def example_nearest_neighbour(app: App):
+    neigbhour_2()
+    neigbhour_4()
+
+    data = {
+        'title': 'Resizing',
+        'header': 'Nearest neighbour interpolation',
+        'image_data': [ImageData("Scale: 2", "n_2.jpg"), ImageData("Scale: 4", "n_4.jpg")]
+    }
+    app.register_route("/nearest_neighbour/", template_name="main_page.html", **data)
+
+
+def example_bilinear(app: App):
+    bilinear_2()
+    bilinear_4()
+
+    data = {
+        'title': 'Resizing',
+        'header': 'Bilinear interpolation',
+        'image_data': [ImageData("Scale: 2", "bl_2.jpg"), ImageData("Scale: 4", "bl_4.jpg")]
+    }
+    app.register_route("/bilinear_interpolation", template_name="main_page.html", **data)
+
+
+def example_bicubic(app: App):
+    bicubic_2()
+    bicubic_4()
+
+    data = {
+        'title': 'Resizing',
+        'header': 'Bicubic interpolation',
+        'image_data': [ImageData("Scale: 2", "bc_2.jpg"), ImageData("Scale: 4", "bc_4.jpg")]
+    }
+    app.register_route("/bicubic_interpolation", template_name="main_page.html", **data)
+
+
+def example(app: App):
+    example_nearest_neighbour(app)
+    example_bilinear(app)
+    example_bicubic(app)
+
+
+if __name__ == "__main__":
+    app = App()
+    example(app)
+    app.run_server("127.0.0.1", 8001, page='/', open_webiste=True)

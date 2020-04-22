@@ -1,7 +1,6 @@
 from flask import render_template
 
 
-
 class TemplateView:
     def __init__(self, template_name, **kwargs):
         self.template_name = template_name

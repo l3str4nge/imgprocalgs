@@ -28,10 +28,14 @@ class App:
     def __init__(self):
         self.app = Flask(__name__, static_folder=self.STATIC_FOLDER, static_url_path=self.STATIC_URL)
         self.routes = []
+        self.template_view = TemplateView(None)  # generic template view due to: flask routing functions overriding
 
-    def run_server(self, host: str, port: int, open_webiste=False):
+    def run_server(self, host: str, port: int, page='/', open_webiste=False):
+        if not page.startswith('/'):
+            raise ValueError("Page should start with `/`")
+
         if open_webiste:
-            threading.Timer(0.25, self.open_website, [f"http://{host}:{port}"]).start()
+            threading.Timer(0.25, self.open_website, [f"http://{host}:{port}{page}"]).start()
 
         self.app.run(host, port)
 
@@ -39,8 +43,9 @@ class App:
         webbrowser.get(using=self.DEFAULT_BROWSER).open(url)
 
     def register_route(self, path: str, template_name: str, **kwargs):
-        route = TemplateView(template_name, **kwargs)
-        self.app.route(path)(route.as_view)
+        self.template_view.template_name = template_name
+        self.template_view.kwargs = kwargs
+        self.app.route(path)(self.template_view.as_view)
 
 
 if __name__ == '__main__':
