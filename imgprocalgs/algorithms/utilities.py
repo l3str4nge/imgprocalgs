@@ -1,5 +1,8 @@
 """ Module including utilities for main algorithms"""
 from PIL import Image as PillowImage
+from collections import namedtuple
+
+ImageData = namedtuple("ImgData", 'header image')
 
 
 class Image:

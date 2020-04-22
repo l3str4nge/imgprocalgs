@@ -1,14 +1,6 @@
 """ Main module which is responsible for validating parameters and also running specific algorithms """
 
-
-# TODO: automate it
-DEFINED_ALGORITHMS = [
-    'sepia',
-    'nearest_neighbour',
-    'bilinear_interpolation',
-    'bicubic_interpolation',
-    'negative'
-]
+from imgprocalgs import algorithms
 
 
 class AlgorithmNotFound(Exception):
@@ -16,7 +8,7 @@ class AlgorithmNotFound(Exception):
 
 
 def validate_algorithm_name(name: str):
-    if name not in DEFINED_ALGORITHMS:
+    if name not in algorithms.__ALGORITHMS__:
         raise AlgorithmNotFound(f"Algorithm with name {name} is not defined!")
 
     return True
