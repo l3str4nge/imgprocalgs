@@ -8,11 +8,15 @@
     <a href="https://codecov.io/gh/mateuszz0000/imgprocalgs">
         <img src="https://img.shields.io/codecov/c/github/mateuszz0000/imgprocalgs">
     </a>
+    <a href="https://www.python.org/">
+        <img src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg">
+    </a>
 </p>
 
 
 
 Collection of common image processing algorithms. This project aims to learn algorithms by coding them from scratch. 
+Small Flask application is used to generate output in website to see algorithm result.
 
 Implemented so far:
 * resizing algorithms:
