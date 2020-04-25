@@ -53,7 +53,7 @@ class FloydSteinberg:
 
         for x in range(self.width):
             for y in range(self.height):
-                if self.factor < input_pixels[x, y][0] + self.error_table[x][y]:
+                if self.factor > input_pixels[x, y][0] + self.error_table[x][y]:
                     self.output_pixels[x, y] = (0, 0, 0)
                     current_error = input_pixels[x, y][0] + self.error_table[x][y]
                 else:
@@ -61,9 +61,9 @@ class FloydSteinberg:
                     current_error = input_pixels[x, y][0] + self.error_table[x][y] - 255
 
                 # error propagation
-                self.error_table[x][y + 1] = self.error_table[x][y + 1] + 7 / 16 * current_error
-                self.error_table[x + 1][y - 1] = self.error_table[x + 1][y - 1] + 3 / 16 * current_error
-                self.error_table[x + 1][y] = self.error_table[x + 1][y] + 5 / 16 * current_error
+                self.error_table[x+1][y] = self.error_table[x + 1][y] + 7 / 16 * current_error
+                self.error_table[x + 1][y + 1] = self.error_table[x + 1][y + 1] + 3 / 16 * current_error
+                self.error_table[x][y + 1] = self.error_table[x][y + 1] + 5 / 16 * current_error
                 self.error_table[x - 1][y + 1] = self.error_table[x - 1][y + 1] + 1 / 16 * current_error
 
         self.output_image.save(os.path.join(self.destination_path, "output_floyd_steinberg.jpg"))
