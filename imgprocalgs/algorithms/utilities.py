@@ -21,3 +21,7 @@ class Image:
 
 def create_empty_image(width: int, height: int) -> PillowImage:
     return PillowImage.new("RGB", (width, height), "#000000")
+
+
+def get_greyscale(red, green, blue):
+    return 0.2126 * red + 0.587 * green + 0.114 * blue

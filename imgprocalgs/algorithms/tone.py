@@ -1,5 +1,5 @@
 import functools
-from imgprocalgs.algorithms.utilities import Image, create_empty_image, ImageData
+from imgprocalgs.algorithms.utilities import Image, create_empty_image, ImageData, get_greyscale
 from imgprocalgs.visualisation.server import App
 
 
@@ -20,8 +20,7 @@ def make_sepia(image_path: str, dest_path: str, factor: int):
     output.save(dest_path)
 
 
-def get_greyscale(red, green, blue):
-    return 0.2126 * red + 0.587 * green + 0.114 * blue
+
 
 
 make_sepia_5 = functools.partial(make_sepia, 'tests/data/desert.jpg', 'data/desert_sepia_5.jpg', factor=5)
