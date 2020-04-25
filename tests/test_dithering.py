@@ -4,7 +4,7 @@ from imgprocalgs.algorithms.dithering import FloydSteinberg
 
 
 class TestFloydSteinberg(TestCase):
-    TEST_IMAGE = "tests/data/desert.jpg"
+    TEST_IMAGE = "tests/data/lena.jpg"
 
     def setUp(self):
         self.dest_path = 'tests/data/'

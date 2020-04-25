@@ -56,19 +56,14 @@ class FloydSteinberg:
                 if self.factor < input_pixels[x, y][0] + self.error_table[x][y]:
                     self.output_pixels[x, y] = (0, 0, 0)
                     current_error = input_pixels[x, y][0] + self.error_table[x][y]
-                    print(self.error_table[x][y])
                 else:
                     self.output_pixels[x, y] = (255, 255, 255)
-                    current_error = input_pixels[x, y][0] + self.error_table[x][y] - self.max_factor
+                    current_error = input_pixels[x, y][0] + self.error_table[x][y] - 255
 
                 # error propagation
-                try:
-                    self.error_table[x][y + 1] = self.error_table[x][y + 1] + 7 / 16 * current_error
-                    self.error_table[x][y - 2] = self.error_table[x][y - 1] + 3 / 16 * current_error
-                    self.error_table[x + 1][y] = self.error_table[x + 1][y] + 5 / 16 * current_error
-                    self.error_table[x - 1][y] = self.error_table[x - 1][y] + 1 / 16 * current_error
-                except Exception as e:
-                    print(e, x, y, len(self.error_table), self.width, )
+                self.error_table[x][y + 1] = self.error_table[x][y + 1] + 7 / 16 * current_error
+                self.error_table[x + 1][y - 1] = self.error_table[x + 1][y - 1] + 3 / 16 * current_error
+                self.error_table[x + 1][y] = self.error_table[x + 1][y] + 5 / 16 * current_error
+                self.error_table[x - 1][y + 1] = self.error_table[x - 1][y + 1] + 1 / 16 * current_error
 
-        print(os.path.join(self.destination_path, "output_floyd_steinberg.jpg"))
         self.output_image.save(os.path.join(self.destination_path, "output_floyd_steinberg.jpg"))
