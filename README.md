@@ -15,7 +15,7 @@
 
 
 
-Collection of common image processing algorithms. This project aims to learn algorithms by coding them from scratch in Python >= 3.6. 
+Collection of common image processing algorithms. This project aims to learn digital image processing algorithms by coding them from scratch in Python >= 3.6. 
 Small Flask application is used to generate output in website to see algorithm result.
 
 Travis-CI is used for CI/CD environment.
