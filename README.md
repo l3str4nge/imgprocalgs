@@ -29,3 +29,5 @@ Implemented so far:
     * negative (https://en.wikipedia.org/wiki/Negative_(photography))
 * tone
     * sepia (https://en.wikipedia.org/wiki/Photographic_print_toning#Sepia_toning)
+* dithering
+    * Floyd-Steinberg (https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering)
