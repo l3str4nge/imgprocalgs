@@ -30,5 +30,5 @@ class TestTiltShift(TestCase):
         self.assertEqual(7, len(ts.filter_elements))
 
     def test_process(self):
-        ts = TiltShift(self.TEST_IMAGE, self.DEST_PATH, 1, 6)
+        ts = TiltShift(self.TEST_IMAGE, self.DEST_PATH, 0.1, 6)
         ts.process()
