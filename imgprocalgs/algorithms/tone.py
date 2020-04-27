@@ -20,9 +20,6 @@ def make_sepia(image_path: str, dest_path: str, factor: int):
     output.save(dest_path)
 
 
-
-
-
 make_sepia_5 = functools.partial(make_sepia, 'tests/data/desert.jpg', 'data/desert_sepia_5.jpg', factor=5)
 make_sepia_10 = functools.partial(make_sepia, 'tests/data/desert.jpg', 'data/desert_sepia_10.jpg', factor=10)
 make_sepia_20 = functools.partial(make_sepia, 'tests/data/desert.jpg', 'data/desert_sepia_20.jpg', factor=20)
