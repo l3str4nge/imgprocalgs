@@ -56,6 +56,15 @@ class TiltShift:
                 blue = self.process_component(2, x, y, width - 1)
                 output_pixels[x, y] = (red, green, blue)
 
+        for x in range(width):
+            for y in range(height):
+                blur = 0.002
+                self.generate_filter_elements(blur, 7)
+                red = self.process_component(0, x, y, height - 1)
+                green = self.process_component(1, x, y, height - 1)
+                blue = self.process_component(2, x, y, height - 1)
+                output_pixels[x, y] = (red, green, blue)
+
         output.save(os.path.join(self.destination_path, 'output_tilt_shift.jpg'))
 
     def process_component(self, index, x, y, max_value):
