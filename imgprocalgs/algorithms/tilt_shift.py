@@ -51,28 +51,39 @@ class TiltShift:
                 # blur = self._make_blur(1, 1)  # TODO: add logic, fixed value now
                 blur = 0.002
                 self.generate_filter_elements(blur, 7)
-                red = self.process_component(0, x, y, width - 1)
-                green = self.process_component(1, x, y, width - 1)
-                blue = self.process_component(2, x, y, width - 1)
+                red = self.process_horizontal(0, x, y, width - 1)
+                green = self.process_horizontal(1, x, y, width - 1)
+                blue = self.process_horizontal(2, x, y, width - 1)
                 output_pixels[x, y] = (red, green, blue)
 
         for x in range(width):
             for y in range(height):
                 blur = 0.002
                 self.generate_filter_elements(blur, 7)
-                red = self.process_component(0, x, y, height - 1)
-                green = self.process_component(1, x, y, height - 1)
-                blue = self.process_component(2, x, y, height - 1)
+                red = self.process_vertical(0, x, y, height - 1)
+                green = self.process_vertical(1, x, y, height - 1)
+                blue = self.process_vertical(2, x, y, height - 1)
                 output_pixels[x, y] = (red, green, blue)
 
         output.save(os.path.join(self.destination_path, 'output_tilt_shift.jpg'))
 
-    def process_component(self, index, x, y, max_value):
+    def process_horizontal(self, index, x, y, max_value):
         numerator = self.filter_elements[0] * self.pixels[x, y][index]
         denumerator = self.filter_elements[0]
         # print(self.filter_elements)
         for i, value in enumerate(self.filter_elements[1:]):
             numerator += value * self.pixels[abs(x - i), y][index] + value * self.pixels[min(x + 1, max_value), y][index]
+            denumerator += 2 * value
+
+        return int(numerator / denumerator)
+
+    def process_vertical(self, index, x, y, max_index):
+        numerator = self.filter_elements[0] * self.pixels[x, y][index]
+        denumerator = self.filter_elements[0]
+        # print(self.filter_elements)
+        for i, value in enumerate(self.filter_elements[1:]):
+            numerator += value * self.pixels[x, abs(y - i)][index] + value * self.pixels[x, min(y + i, max_index)][
+                index]
             denumerator += 2 * value
 
         return int(numerator / denumerator)
