@@ -1,4 +1,3 @@
-import os
 from unittest import TestCase
 from imgprocalgs.algorithms.tilt_shift import TiltShift
 
@@ -8,8 +7,8 @@ class TestTiltShift(TestCase):
     DEST_PATH = "tests/data"
 
     def test_make_filter_factor(self):
-        self.assertEqual(0.24197072451914337, TiltShift._make_filter_factor(0.5, 0))
-        self.assertEqual(6.691511288244271e-05, TiltShift._make_filter_factor(2, 2))
+        self.assertEqual(0.7978845608028654, TiltShift._make_filter_factor(0.5, 0))
+        self.assertEqual(0.12098536225957168, TiltShift._make_filter_factor(2, 2))
 
     def test_blur(self):
         ts = TiltShift(self.TEST_IMAGE, self.DEST_PATH, 1, 4)
@@ -27,7 +26,7 @@ class TestTiltShift(TestCase):
         ts = TiltShift(self.TEST_IMAGE, self.DEST_PATH, 0.1, 6)
 
         ts.generate_filter_elements(blur=0.5, max_factor=700)
-        self.assertEqual(7, len(ts.filter_elements))
+        self.assertEqual(2, len(ts.filter_elements))
 
     def test_process(self):
         ts = TiltShift(self.TEST_IMAGE, self.DEST_PATH, 0.1, 6)

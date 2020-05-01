@@ -88,7 +88,7 @@ class TiltShift:
     def process_vertical(self, index, x, y, max_index):
         numerator = self.filter_elements[0] * self.pixels[x, y][index]
         denumerator = self.filter_elements[0]
-        
+
         for i, value in enumerate(self.filter_elements[1:]):
             numerator += value * self.pixels[x, abs(y - i)][index] + value * self.pixels[x, min(y + i, max_index)][
                 index]
