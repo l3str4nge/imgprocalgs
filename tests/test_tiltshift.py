@@ -8,7 +8,7 @@ class TestTiltShift(TestCase):
     DEST_PATH = "tests/data"
 
     def test_make_filter_factor(self):
-        self.assertEqual(0.24197072451914337, TiltShift._make_filter_factor(1, 1))
+        self.assertEqual(0.24197072451914337, TiltShift._make_filter_factor(0.5, 0))
         self.assertEqual(6.691511288244271e-05, TiltShift._make_filter_factor(2, 2))
 
     def test_blur(self):

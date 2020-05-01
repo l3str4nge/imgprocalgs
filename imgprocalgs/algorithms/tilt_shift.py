@@ -1,6 +1,6 @@
 import os
 import itertools
-from math import sqrt, pi, e
+from math import sqrt, pi, e, exp
 from imgprocalgs.algorithms.utilities import create_empty_image
 
 from imgprocalgs.algorithms.utilities import Image
@@ -22,7 +22,7 @@ class TiltShift:
 
     @classmethod
     def _make_filter_factor(cls, blur: float, index: int):
-        return (1 / (sqrt(2 * pi) * blur)) * pow(e, -(pow(index, 2)/2 * pow(blur, 2)))
+        return (1 / (sqrt(2 * pi) * blur)) * exp(-pow(index, 2)/(2 * pow(blur, 2)))
 
     def _make_blur(self, distance: int, sharp_area_size: int):
         """
@@ -30,7 +30,7 @@ class TiltShift:
         :param sharp_area_size: sharp area size height/width
         :return: blur value
         """
-        return self.min_blur + (self.max_blur - self.min_blur) * distance / sharp_area_size
+        return abs(self.min_blur + (self.max_blur - self.min_blur) * distance / sharp_area_size)
 
     def generate_filter_elements(self, blur: float, max_factor: int):
         self.filter_elements = list(itertools.takewhile(
@@ -48,11 +48,12 @@ class TiltShift:
 
         for x in range(width):
             for y in range(height):
-                # blur = self._make_blur(1, 1)  # TODO: add logic, fixed value now
+
                 if 200 < y < 400:
                     output_pixels[x, y] = self.pixels[x, y]
                     continue
-                blur = 0.002
+
+                blur = self._make_blur(300 - y, 200)
                 self.generate_filter_elements(blur, 7)
                 red = self.process_horizontal(0, x, y, width - 1)
                 green = self.process_horizontal(1, x, y, width - 1)
@@ -64,7 +65,8 @@ class TiltShift:
                 if 200 < y < 400:
                     output_pixels[x, y] = self.pixels[x, y]
                     continue
-                blur = 0.002
+
+                blur = self._make_blur(300 - y, 200)
                 self.generate_filter_elements(blur, 7)
                 red = self.process_vertical(0, x, y, height - 1)
                 green = self.process_vertical(1, x, y, height - 1)
@@ -76,7 +78,7 @@ class TiltShift:
     def process_horizontal(self, index, x, y, max_value):
         numerator = self.filter_elements[0] * self.pixels[x, y][index]
         denumerator = self.filter_elements[0]
-        # print(self.filter_elements)
+
         for i, value in enumerate(self.filter_elements[1:]):
             numerator += value * self.pixels[abs(x - i), y][index] + value * self.pixels[min(x + 1, max_value), y][index]
             denumerator += 2 * value
@@ -86,7 +88,7 @@ class TiltShift:
     def process_vertical(self, index, x, y, max_index):
         numerator = self.filter_elements[0] * self.pixels[x, y][index]
         denumerator = self.filter_elements[0]
-        # print(self.filter_elements)
+        
         for i, value in enumerate(self.filter_elements[1:]):
             numerator += value * self.pixels[x, abs(y - i)][index] + value * self.pixels[x, min(y + i, max_index)][
                 index]
