@@ -49,6 +49,9 @@ class TiltShift:
         for x in range(width):
             for y in range(height):
                 # blur = self._make_blur(1, 1)  # TODO: add logic, fixed value now
+                if 200 < y < 400:
+                    output_pixels[x, y] = self.pixels[x, y]
+                    continue
                 blur = 0.002
                 self.generate_filter_elements(blur, 7)
                 red = self.process_horizontal(0, x, y, width - 1)
@@ -58,6 +61,9 @@ class TiltShift:
 
         for x in range(width):
             for y in range(height):
+                if 200 < y < 400:
+                    output_pixels[x, y] = self.pixels[x, y]
+                    continue
                 blur = 0.002
                 self.generate_filter_elements(blur, 7)
                 red = self.process_vertical(0, x, y, height - 1)
