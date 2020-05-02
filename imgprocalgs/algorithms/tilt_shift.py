@@ -1,6 +1,6 @@
 import os
 import itertools
-from math import sqrt, pi, e, exp
+from math import sqrt, pi, exp
 from typing import List
 
 from imgprocalgs.algorithms.utilities import create_empty_image
@@ -9,6 +9,7 @@ from imgprocalgs.algorithms.utilities import Image
 
 
 class TiltShift:
+    """ Tilt-shift technique """
     def __init__(self,
                  image_path: str,
                  destination_path: str,
@@ -92,22 +93,21 @@ class TiltShift:
         output.save(os.path.join(self.destination_path, 'output_tilt_shift.jpg'))
 
     def process_horizontal(self, index, x, y, max_value):
-        numerator = self.filter_elements[0] * self.pixels[x, y][index]
-        denumerator = self.filter_elements[0]
+        num = self.filter_elements[0] * self.pixels[x, y][index]
+        denum = self.filter_elements[0]
 
         for i, value in enumerate(self.filter_elements[1:]):
-            numerator += value * self.pixels[abs(x - i), y][index] + value * self.pixels[min(x + 1, max_value), y][index]
-            denumerator += 2 * value
+            num += value * self.pixels[abs(x - i), y][index] + value * self.pixels[min(x + 1, max_value), y][index]
+            denum += 2 * value
 
-        return int(numerator / denumerator)
+        return int(num / denum)
 
     def process_vertical(self, index, x, y, max_index):
-        numerator = self.filter_elements[0] * self.pixels[x, y][index]
-        denumerator = self.filter_elements[0]
+        num = self.filter_elements[0] * self.pixels[x, y][index]
+        denum = self.filter_elements[0]
 
         for i, value in enumerate(self.filter_elements[1:]):
-            numerator += value * self.pixels[x, abs(y - i)][index] + value * self.pixels[x, min(y + i, max_index)][
-                index]
-            denumerator += 2 * value
+            num += value * self.pixels[x, abs(y - i)][index] + value * self.pixels[x, min(y + i, max_index)][index]
+            denum += 2 * value
 
-        return int(numerator / denumerator)
+        return int(num / denum)
