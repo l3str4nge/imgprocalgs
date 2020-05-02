@@ -1,17 +1,33 @@
 import os
 import itertools
 from math import sqrt, pi, e, exp
+from typing import List
+
 from imgprocalgs.algorithms.utilities import create_empty_image
 
 from imgprocalgs.algorithms.utilities import Image
 
 
 class TiltShift:
-    def __init__(self, image_path: str, destination_path: str, min_blur: float, max_blur: float):
+    def __init__(self,
+                 image_path: str,
+                 destination_path: str,
+                 min_blur: float,
+                 max_blur: float,
+                 sharpen_area_size: List=None):
+
         self.image_path = image_path
         self.destination_path = destination_path
         self.input_image = Image(self.image_path)
         self.pixels = self.input_image.pixels
+
+        if not sharpen_area_size:
+            sharpen_area_size = [0, 0]
+
+        self.sharpen_min_h, self.sharpen_max_h = sharpen_area_size[0], sharpen_area_size[1]
+        self.sharpen_size = self.sharpen_max_h - self.sharpen_min_h
+        self.sharpen_center = self.sharpen_min_h + self.sharpen_size // 2
+
         self.filter_elements = []
 
         self.min_factor = 0.003
@@ -49,11 +65,11 @@ class TiltShift:
         for x in range(width):
             for y in range(height):
 
-                if 200 < y < 400:
+                if self.sharpen_min_h < y < self.sharpen_max_h:
                     output_pixels[x, y] = self.pixels[x, y]
                     continue
 
-                blur = self._make_blur(300 - y, 200)
+                blur = self._make_blur(self.sharpen_center - y, self.sharpen_size)
                 self.generate_filter_elements(blur, 7)
                 red = self.process_horizontal(0, x, y, width - 1)
                 green = self.process_horizontal(1, x, y, width - 1)
@@ -62,11 +78,11 @@ class TiltShift:
 
         for x in range(width):
             for y in range(height):
-                if 200 < y < 400:
+                if self.sharpen_min_h < y < self.sharpen_max_h:
                     output_pixels[x, y] = self.pixels[x, y]
                     continue
 
-                blur = self._make_blur(300 - y, 200)
+                blur = self._make_blur(self.sharpen_center - y, self.sharpen_size)
                 self.generate_filter_elements(blur, 7)
                 red = self.process_vertical(0, x, y, height - 1)
                 green = self.process_vertical(1, x, y, height - 1)
