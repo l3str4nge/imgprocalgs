@@ -27,6 +27,7 @@ Implemented so far:
     * Bicubic interpolation (https://en.wikipedia.org/wiki/Bicubic_interpolation)
 * other:
     * negative (https://en.wikipedia.org/wiki/Negative_(photography))
+    * Tilt-shift (https://pl.wikipedia.org/wiki/Tilt-shift)
 * tone
     * sepia (https://en.wikipedia.org/wiki/Photographic_print_toning#Sepia_toning)
 * dithering
