@@ -25,3 +25,10 @@ class TestRGBToHSV(TestCase):
         self.assertEqual(357.27272727272725, hsv.h)
         self.assertEqual(0.9565217391304348, hsv.s)
         self.assertEqual(0.9019607843137255, hsv.v)
+
+    def test_greyscale(self):
+        self.assertEqual(91.36, utilities.get_greyscale(100, 100, 100))
+        self.assertEqual(0.0, utilities.get_greyscale(0, 0, 0))
+        self.assertEqual(67.095, utilities.get_greyscale(255, 0, 113))
+        self.assertEqual(232.968, utilities.get_greyscale(255, 255, 255))
+        self.assertEqual(168.93599999999998, utilities.get_greyscale(165, 189, 201))
