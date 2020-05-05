@@ -28,7 +28,7 @@ def get_greyscale(red: int, green: int, blue: int) -> float:
     return 0.2126 * red + 0.587 * green + 0.114 * blue
 
 
-def rgb_to_hsv(red: int, green: int, blue: int) -> tuple:
+def rgb_to_hsv(red: int, green: int, blue: int) -> namedtuple:
     _red = red / 255
     _green = green / 255
     _blue = blue / 255
@@ -40,11 +40,11 @@ def rgb_to_hsv(red: int, green: int, blue: int) -> tuple:
 
     if delta > 0:
         if c_max == _red:
-            h = 60 * (((_green - _blue) % 6) / delta)
+            h = 60 * (((_green - _blue) / delta) % 6)
         elif c_max == _green:
             h = 60 * (((_blue - _red) / delta) + 2)
         elif c_max == _blue:
-            h = 60 * (((_red - green) / delta) + 2)
+            h = 60 * (((_red - _green) / delta) + 4)
         else:
             raise ValueError(f"c_max ({c_max} is not equal {_red}/{_green}/{_blue})")
     else:
