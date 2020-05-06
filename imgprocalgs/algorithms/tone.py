@@ -54,6 +54,10 @@ def example(app: App):
     app.register_route("/", template_name="main_page.html", **data)
 
 
+def main():
+    print("Test setuptools")
+
+
 if __name__ == "__main__":
     app = App()
     example(app)

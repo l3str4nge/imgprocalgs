@@ -20,4 +20,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    entry_points={
+        'console_scripts': [
+            'tone=imgprocalgs.algorithms.tone:main'
+        ],
+    }
 )
