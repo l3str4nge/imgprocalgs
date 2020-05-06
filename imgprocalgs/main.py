@@ -6,6 +6,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from imgprocalgs import application
+from imgprocalgs import lol
 
 
 def parse_args():
@@ -18,4 +19,10 @@ def parse_args():
 
 
 if __name__ == '__main__':
-    application.run(parse_args())
+    args = parse_args()
+
+    if args.src == 'test':
+        lol()
+
+
+    # application.run(parse_args())

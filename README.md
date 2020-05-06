@@ -28,6 +28,7 @@ Implemented so far:
 * other:
     * negative (https://en.wikipedia.org/wiki/Negative_(photography))
     * Tilt-shift (https://pl.wikipedia.org/wiki/Tilt-shift)
+    * RGB to HSV conversion(https://en.wikipedia.org/wiki/HSL_and_HSV)
 * tone
     * sepia (https://en.wikipedia.org/wiki/Photographic_print_toning#Sepia_toning)
 * dithering
