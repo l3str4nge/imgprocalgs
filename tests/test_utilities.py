@@ -2,7 +2,7 @@ from unittest import TestCase
 from imgprocalgs.algorithms import utilities
 
 
-class TestRGBToHSV(TestCase):
+class TestUtilities(TestCase):
     TEST_IMAGE = "tests/data/desert.jpg"
 
     def test_rgb_to_hsv(self):
