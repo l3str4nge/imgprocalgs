@@ -26,6 +26,17 @@ class TestUtilities(TestCase):
         self.assertEqual(0.9565217391304348, hsv.s)
         self.assertEqual(0.9019607843137255, hsv.v)
 
+    def test_hsv_to_rgb(self):
+        rgb = utilities.hsv_to_rgb(200, 0.1, 0.2)
+        self.assertEqual(45, rgb.r)
+        self.assertEqual(49, rgb.g)
+        self.assertEqual(51, rgb.b)
+
+        rgb = utilities.hsv_to_rgb(150, 0.5, 0.8)
+        self.assertEqual(102, rgb.r)
+        self.assertEqual(204, rgb.g)
+        self.assertEqual(153, rgb.b)
+
     def test_greyscale(self):
         self.assertEqual(91.36, utilities.get_greyscale(100, 100, 100))
         self.assertEqual(0.0, utilities.get_greyscale(0, 0, 0))

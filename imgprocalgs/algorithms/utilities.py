@@ -4,6 +4,7 @@ from collections import namedtuple
 
 ImageData = namedtuple("ImgData", 'header image')
 HSV = namedtuple("HSV", 'h s v')
+RGB = namedtuple("RGB", 'r g b')
 
 
 class Image:
@@ -54,3 +55,29 @@ def rgb_to_hsv(red: int, green: int, blue: int) -> namedtuple:
 
     return HSV(h, s, c_max)
 
+
+def hsv_to_rgb(h: float, s: float, v: float) -> namedtuple:
+    c = v * s
+    x = c * (1 - abs((h/60) % 2 - 1))
+    m = v - c
+
+    if 0 <= h < 60:
+        red, green, blue = c, x, 0
+    elif 60 <= h < 120:
+        red, green, blue = x, c, 0
+    elif 120 <= h < 180:
+        red, green, blue = 0, c, x
+    elif 180 <= h < 240:
+        red, green, blue = 0, x, c
+    elif 240 <= h < 300:
+        red, green, blue = x, 0, c
+    elif 300 <= h < 360:
+        red, green, blue = c, 0, x
+    else:
+        raise ValueError(f"h value: {h} is out of range (0, 360)")
+
+    return RGB(
+        int((red + m) * 255),
+        int((green + m) * 255),
+        int((blue + m) * 255)
+    )
