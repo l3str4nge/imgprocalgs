@@ -22,7 +22,7 @@ setuptools.setup(
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [
-            'sepia=imgprocalgs.algorithms.tone:main',
+            'imgprocalgs-sepia=imgprocalgs.algorithms.tone:main',
         ],
     }
 )
