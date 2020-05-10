@@ -1,3 +1,4 @@
+import argparse
 import functools
 from imgprocalgs.algorithms.utilities import Image, create_empty_image, ImageData, get_greyscale
 from imgprocalgs.visualisation.server import App
@@ -54,8 +55,24 @@ def example(app: App):
     app.register_route("/", template_name="main_page.html", **data)
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Tone algorithms')
+    parser.add_argument("--src", type=str, help="Source file path.")
+    parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
+    parser.add_argument("--factor", type=int, help="Sepia factor value")
+    parser.add_argument("--example", type=bool, help="Show example", default=False)
+    parser.add_argument("--visualize", type=bool, help="Open visualization in webbrowser", default=False)
+    return parser.parse_args()
+
+
 def main():
-    print("Test setuptools")
+    args = parse_args()
+    app = App()
+    if args.example:
+        example(app)
+        app.run_server('127.0.0.1', 8000, open_webiste=args.visualize)
+    else:
+        make_sepia(args.src, args.dest, args.factor)
 
 
 if __name__ == "__main__":
