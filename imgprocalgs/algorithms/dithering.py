@@ -61,9 +61,38 @@ class FloydSteinberg:
                     current_error = input_pixels[x, y][0] + self.error_table[x][y] - 255
 
                 # error propagation
-                self.error_table[x+1][y] = self.error_table[x + 1][y] + 7 / 16 * current_error
-                self.error_table[x + 1][y + 1] = self.error_table[x + 1][y + 1] + 3 / 16 * current_error
-                self.error_table[x][y + 1] = self.error_table[x][y + 1] + 5 / 16 * current_error
-                self.error_table[x - 1][y + 1] = self.error_table[x - 1][y + 1] + 1 / 16 * current_error
+                self._propagate_error(x, y, current_error)
 
         self.output_image.save(os.path.join(self.destination_path, "output_floyd_steinberg.jpg"))
+
+    def _propagate_error(self, x, y, current_error):
+        self.error_table[x + 1][y] += + 7 / 16 * current_error
+        self.error_table[x + 1][y + 1] += 3 / 16 * current_error
+        self.error_table[x][y + 1] += 5 / 16 * current_error
+        self.error_table[x - 1][y + 1] += 1 / 16 * current_error
+
+
+class JarvisJudiceNinke(FloydSteinberg):
+    """
+    Floyd staingerg extension
+    https://pl.wikipedia.org/wiki/Dithering_(grafika_komputerowa)
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_table = [[0 for _ in range(self.height + 3)] for __ in range(self.width + 3)]
+
+    def _propagate_error(self, x, y, current_error):
+        self.error_table[x + 1][y] += 7 / 48 * current_error
+        self.error_table[x + 2][y] += 5 / 48 * current_error
+
+        self.error_table[x][y + 1] += 7 / 48 * current_error
+        self.error_table[x + 1][y + 1] += 5 / 48 * current_error
+        self.error_table[x + 2][y + 1] += 3 / 48 * current_error
+        self.error_table[x - 1][y + 1] += 5 / 48 * current_error
+        self.error_table[x - 2][y + 1] += 3 / 48 * current_error
+
+        self.error_table[x][y + 2] += 5 / 48 * current_error
+        self.error_table[x + 1][y + 2] += 3 / 48 * current_error
+        self.error_table[x + 2][y + 2] += 1 / 48 * current_error
+        self.error_table[x - 1][y + 2] += 3 / 48 * current_error
+        self.error_table[x - 2][y + 2] += 1 / 48 * current_error
