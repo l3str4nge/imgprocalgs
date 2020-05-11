@@ -1,3 +1,4 @@
+import argparse
 import os
 import itertools
 from math import sqrt, pi, exp
@@ -111,3 +112,24 @@ class TiltShift:
             denum += 2 * value
 
         return int(num / denum)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Tilt-shift effect')
+    parser.add_argument("--src", type=str, help="Source file path.")
+    parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
+    parser.add_argument("--min_blur", type=float, help="Min blur factor")
+    parser.add_argument("--max_blur", type=float, help="Max blur factor")
+    parser.add_argument("--sharpen_area_size", type=list, help="Sharpen area size")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    TiltShift(
+        args.src,
+        args.dest,
+        args.min_blur,
+        args.max_blur,
+        args.sharpem_area_size
+    ).process()

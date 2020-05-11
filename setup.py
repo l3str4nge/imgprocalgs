@@ -23,6 +23,7 @@ setuptools.setup(
     entry_points={
         'console_scripts': [
             'imgprocalgs-sepia=imgprocalgs.algorithms.tone:main',
+            'imgprocalgs-tiltshift=imgprocalgs.algorithms.tilt_shift:main',
         ],
     }
 )
