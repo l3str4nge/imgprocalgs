@@ -75,7 +75,7 @@ class FloydSteinberg:
 class JarvisJudiceNinke(FloydSteinberg):
     """
     Floyd staingerg extension
-    https://pl.wikipedia.org/wiki/Dithering_(grafika_komputerowa)
+    https://en.wikipedia.org/wiki/Dither
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

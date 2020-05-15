@@ -35,3 +35,4 @@ Implemented so far:
     * sepia (https://en.wikipedia.org/wiki/Photographic_print_toning#Sepia_toning)
 * dithering
     * Floyd-Steinberg (https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering)
+    * Jarvis Judice Ninke (https://en.wikipedia.org/wiki/Dither)
