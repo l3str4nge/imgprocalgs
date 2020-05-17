@@ -36,3 +36,16 @@ Implemented so far:
 * dithering
     * Floyd-Steinberg (https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering)
     * Jarvis Judice Ninke (https://en.wikipedia.org/wiki/Dither)
+
+##### Installation
+```buildoutcfg
+git clone https://github.com/mateuszz0000/imgprocalgs
+pip install -U imgprocalgs/
+```
+
+##### Usage
+A different entry point is prepared for each type of algorithm:
+```buildoutcfg
+imgprocalgs-sepia <OPTIONS>
+imgprocalgs-tiltshift <OPTIONS>
+```
