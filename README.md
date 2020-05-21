@@ -52,3 +52,6 @@ imgprocalgs-dithering <OPTIONS>
 imgprocalgs-negative <OPTIONS>
 imgprocalgs-color-accent <OPTIONS>
 ```
+
+#### Contribution
+Read our [Contribution Guidelines](CONTRIBUTING.md) before you contribute.
