@@ -1,5 +1,5 @@
 """ Module including dithering algorithms """
-
+import argparse
 import os
 
 from PIL import Image as PillowImage
@@ -96,3 +96,23 @@ class JarvisJudiceNinke(FloydSteinberg):
         self.error_table[x + 2][y + 2] += 1 / 48 * current_error
         self.error_table[x - 1][y + 2] += 3 / 48 * current_error
         self.error_table[x - 2][y + 2] += 1 / 48 * current_error
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Color accent algorithm')
+    parser.add_argument("--src", type=str, help="Source file path.")
+    parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
+    parser.add_argument("--method", type=str, help="Dithering method")
+    parser.add_argument("--factor", type=int, help="Factor when goes black/white pixel")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+
+    if args.method.lower() == "floydsteingerg":
+        FloydSteinberg(args.src, args.dest, args.factor).process()
+    elif args.method.lower() == "jarvisjudiceninke":
+        JarvisJudiceNinke(args.src, args.dest, args.factor).process()
+    else:
+        raise Exception(f"No such dithering algorithm: {args.method}")

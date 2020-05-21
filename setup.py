@@ -25,6 +25,7 @@ setuptools.setup(
             'imgprocalgs-sepia=imgprocalgs.algorithms.tone:main',
             'imgprocalgs-tiltshift=imgprocalgs.algorithms.tilt_shift:main',
             'imgprocalgs-color-accent=imgprocalgs.algorithms.color_acccent:main',
+            'imgprocalgs-dithering=imgprocalgs.algorithms.dithering:main',
         ],
     }
 )
