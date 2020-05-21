@@ -24,6 +24,7 @@ setuptools.setup(
         'console_scripts': [
             'imgprocalgs-sepia=imgprocalgs.algorithms.tone:main',
             'imgprocalgs-tiltshift=imgprocalgs.algorithms.tilt_shift:main',
+            'imgprocalgs-color-accent=imgprocalgs.algorithms.color_acccent:main',
         ],
     }
 )

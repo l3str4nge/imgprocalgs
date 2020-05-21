@@ -1,3 +1,5 @@
+import argparse
+
 from imgprocalgs.algorithms import utilities
 
 
@@ -27,3 +29,17 @@ def accent_color(input_path: str, output_path: str, h: float, _range: int):
                 output_pixels[x, y] = (greyscale_value, greyscale_value, greyscale_value)
 
     output_image.save(output_path)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Color accent algorithm')
+    parser.add_argument("--src", type=str, help="Source file path.")
+    parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
+    parser.add_argument("--h", type=int, help="Color which you want to accent")
+    parser.add_argument("--range", type=int, help="Color range.")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    accent_color(args.src, args.dest, args.h, args.range)
