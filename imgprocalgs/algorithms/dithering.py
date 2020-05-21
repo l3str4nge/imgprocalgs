@@ -99,7 +99,7 @@ class JarvisJudiceNinke(FloydSteinberg):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Color accent algorithm')
+    parser = argparse.ArgumentParser(description='Dithering algorithm')
     parser.add_argument("--src", type=str, help="Source file path.")
     parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
     parser.add_argument("--method", type=str, help="Dithering method")

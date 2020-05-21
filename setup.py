@@ -26,6 +26,7 @@ setuptools.setup(
             'imgprocalgs-tiltshift=imgprocalgs.algorithms.tilt_shift:main',
             'imgprocalgs-color-accent=imgprocalgs.algorithms.color_acccent:main',
             'imgprocalgs-dithering=imgprocalgs.algorithms.dithering:main',
+            'imgprocalgs-negative=imgprocalgs.algorithms.negative:main',
         ],
     }
 )
