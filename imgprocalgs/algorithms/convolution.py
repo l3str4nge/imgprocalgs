@@ -34,7 +34,7 @@ def convolution(image, kernel):
 def apply_convolution(image_path: str, dest_path: str, filter_kernel):
     kernel = filter_kernel
     input_image = Image.open(image_path)
-    input_image=input_image.convert('1')      # Convert to black&white
+    input_image = input_image.convert('1')      # Convert to black&white
 
     input_image = asarray(input_image)  # converting to numpy array for array manipulation
     input_array = convolution(input_image, kernel)

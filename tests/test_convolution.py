@@ -2,17 +2,18 @@ import os
 from unittest import TestCase
 from imgprocalgs.algorithms import convolution
 import numpy as np
+from PIL import Image
 
 
 class TestConvolution(TestCase):
-    TEST_IMAGE = "tests/data/desert.jpg"
+    TEST_IMAGE = "tests/data/flower.jpg"
 
     def setUp(self):
-        self.dest_path = 'tests/data/desert_sepia.jpg'
-
-    def tearDown(self):
-        os.remove(self.dest_path)
+        self.image = Image.open(self.TEST_IMAGE)
+        self.image = self.image.convert('1')
+        self.image = np.asarray(self.image)
 
     def test_convolution(self):
-        """ Create (255, 255, 255) image and  check if all (0, 0, 0)"""
-        #tone.make_sepia(self.TEST_IMAGE, self.dest_path, 30)
+        filter_kernel = np.array([[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]])
+        output = convolution.convolution(self.image, filter_kernel)
+        self.assertTrue(output.size != 0)
