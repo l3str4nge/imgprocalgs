@@ -50,4 +50,10 @@ A different entry point is prepared for each type of algorithm:
 ```buildoutcfg
 imgprocalgs-sepia <OPTIONS>
 imgprocalgs-tiltshift <OPTIONS>
-``` 
+imgprocalgs-dithering <OPTIONS>
+imgprocalgs-negative <OPTIONS>
+imgprocalgs-color-accent <OPTIONS>
+```
+
+#### Contribution
+Read our [Contribution Guidelines](CONTRIBUTING.md) before you contribute.
