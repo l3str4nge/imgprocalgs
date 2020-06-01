@@ -35,6 +35,7 @@ class FloydSteinberg:
 
         self.output_image = PillowImage.new("RGB", (self.width, self.height), self.WHITE)
         self.output_pixels = self.output_image.load()
+        self.output_image_name = "output_floyd_steinberg.jpg"
 
     def image2greyscale(self):
         greyscale_image = PillowImage.new("RGB", (self.width, self.height), self.WHITE)
@@ -63,7 +64,7 @@ class FloydSteinberg:
                 # error propagation
                 self._propagate_error(x, y, current_error)
 
-        self.output_image.save(os.path.join(self.destination_path, "output_floyd_steinberg.jpg"))
+        self.output_image.save(os.path.join(self.destination_path, self.output_image_name))
 
     def _propagate_error(self, x, y, current_error):
         self.error_table[x + 1][y] += + 7 / 16 * current_error
@@ -80,6 +81,7 @@ class JarvisJudiceNinke(FloydSteinberg):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.error_table = [[0 for _ in range(self.height + 3)] for __ in range(self.width + 3)]
+        self.output_image_name = "output_fjarvis_judice_ninke.jpg"
 
     def _propagate_error(self, x, y, current_error):
         self.error_table[x + 1][y] += 7 / 48 * current_error
