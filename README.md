@@ -36,6 +36,7 @@ Implemented so far:
 * dithering
     * Floyd-Steinberg (https://en.wikipedia.org/wiki/Floyd%E2%80%93Steinberg_dithering)
     * Jarvis Judice Ninke (https://en.wikipedia.org/wiki/Dither)
+    * Stucki (https://en.wikipedia.org/wiki/Dither)
 * Convolution
     * Edge detection (https://en.wikipedia.org/wiki/Kernel_(image_processing))
 
