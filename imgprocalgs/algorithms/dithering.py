@@ -17,7 +17,7 @@ class FloydSteinberg:
 
     def __init__(self, image_path: str, destination_path: str, factor: int):
         self.min_factor = 0
-        self.max_factor = int(get_greyscale(255, 255, 255))  # max greyscale vlaue for #FFFFFF
+        self.max_factor = int(get_greyscale(255, 255, 255))  # max greyscale valaue for #FFFFFF
 
         if not self.min_factor < factor < self.max_factor:
             raise ValueError(f"Factor value should be from 0 to {self.max_factor}")
@@ -100,6 +100,34 @@ class JarvisJudiceNinke(FloydSteinberg):
         self.error_table[x - 2][y + 2] += 1 / 48 * current_error
 
 
+class Stucki(FloydSteinberg):
+    """
+        Floyd staingerg extension
+        https://en.wikipedia.org/wiki/Dither
+        """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.error_table = [[0 for _ in range(self.height + 3)] for __ in range(self.width + 3)]
+        self.output_image_name = "output_stucki.jpg"
+
+    def _propagate_error(self, x, y, current_error):
+        self.error_table[x + 1][y] += 8 / 42 * current_error
+        self.error_table[x + 2][y] += 4 / 42 * current_error
+
+        self.error_table[x][y + 1] += 8 / 42 * current_error
+        self.error_table[x + 1][y + 1] += 4 / 42 * current_error
+        self.error_table[x + 2][y + 1] += 2 / 42 * current_error
+        self.error_table[x - 1][y + 1] += 4 / 42 * current_error
+        self.error_table[x - 2][y + 1] += 2 / 42 * current_error
+
+        self.error_table[x][y + 2] += 4 / 42 * current_error
+        self.error_table[x + 1][y + 2] += 2 / 42 * current_error
+        self.error_table[x + 2][y + 2] += 1 / 42 * current_error
+        self.error_table[x - 1][y + 2] += 2 / 42 * current_error
+        self.error_table[x - 2][y + 2] += 1 / 42 * current_error
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Dithering algorithm')
     parser.add_argument("--src", type=str, help="Source file path.")
@@ -110,11 +138,16 @@ def parse_args():
 
 
 def main():
-    args = parse_args()
+    name2alg = {
+        "floydsteinberg": FloydSteinberg,
+        "jarbisjdiceninke": JarvisJudiceNinke,
+        "stucki": Stucki
+    }
 
-    if args.method.lower() == "floydsteingerg":
-        FloydSteinberg(args.src, args.dest, args.factor).process()
-    elif args.method.lower() == "jarvisjudiceninke":
-        JarvisJudiceNinke(args.src, args.dest, args.factor).process()
-    else:
+    args = parse_args()
+    cls = name2alg.get(args.method.lower(), None)
+
+    if not cls:
         raise Exception(f"No such dithering algorithm: {args.method}")
+
+    cls(args.src, args.dest, args.factor).process()
