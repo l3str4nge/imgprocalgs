@@ -47,7 +47,7 @@ pip install -U imgprocalgs/
 ```
 
 ##### Usage
-A different entry point is prepared for each type of algorithm:
+Different entry point is prepared for each type of algorithm:
 ```buildoutcfg
 imgprocalgs-sepia <OPTIONS>
 imgprocalgs-tiltshift <OPTIONS>
