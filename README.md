@@ -56,7 +56,7 @@ imgprocalgs-negative <OPTIONS>
 imgprocalgs-color-accent <OPTIONS>
 ```
 ##### Example
-<img src="https://raw.githubusercontent.com/mateuszz0000/imgprocalgs/master/assets/example.png" ></br>
+<img src="https://raw.githubusercontent.com/mateuszz0000/imgprocalgs/master/assets/example_fixed.png" ></br>
 
 #### Contribution
 Read our [Contribution Guidelines](CONTRIBUTING.md) before you contribute.
