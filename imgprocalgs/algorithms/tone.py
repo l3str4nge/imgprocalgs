@@ -32,23 +32,17 @@ make_sepia_60 = functools.partial(make_sepia, 'tests/data/desert.jpg', 'data/des
 
 def example(app: App):
     make_sepia_5()
-    make_sepia_10()
-    make_sepia_20()
     make_sepia_30()
     make_sepia_40()
-    make_sepia_50()
     make_sepia_60()
 
     data = {
         'title': 'Sepia algorithm',
-        'header': 'Sepia algorithm with following factors: 5, 10, 20, 30, 40, 50, 60',
+        'header': 'Sepia algorithm with following factors: 5, 30, 40, 60',
         'image_data': [
             ImageData("Factor: 5", "desert_sepia_5.jpg"),
-            ImageData("Factor: 10", "desert_sepia_10.jpg"),
-            ImageData("Factor: 20", "desert_sepia_20.jpg"),
             ImageData("Factor: 30", "desert_sepia_30.jpg"),
             ImageData("Factor: 40", "desert_sepia_40.jpg"),
-            ImageData("Factor: 50", "desert_sepia_50.jpg"),
             ImageData("Factor: 60", "desert_sepia_60.jpg"),
         ]
     }

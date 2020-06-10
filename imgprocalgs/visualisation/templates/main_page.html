@@ -3,14 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
+    <style>
+    body {
+        background: #0F2027;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        text-align: center;
+        color: white;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+    }
+    </style>
 </head>
 <body>
     <h1>{{ header }}</h1>
-    {% for data in image_data %}
-    <div>
-        <h1>{{ data.header }}</h1>
-        <img src="{{url_for('static', filename=data.image)}}" align="middle" />
+    <div class="container">
+        {% for data in image_data %}
+        <div>
+            <h1>{{ data.header }}</h1>
+            <img style="width: 400px;" src="{{url_for('static', filename=data.image)}}" align="middle" />
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </body>
 </html>
