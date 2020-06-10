@@ -55,6 +55,8 @@ imgprocalgs-dithering <OPTIONS>
 imgprocalgs-negative <OPTIONS>
 imgprocalgs-color-accent <OPTIONS>
 ```
+##### Example
+<img src="https://raw.githubusercontent.com/mateuszz0000/imgprocalgs/master/assets/example.png" ></br>
 
 #### Contribution
 Read our [Contribution Guidelines](CONTRIBUTING.md) before you contribute.
