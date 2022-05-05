@@ -131,5 +131,5 @@ def main():
         args.dest,
         args.min_blur,
         args.max_blur,
-        args.sharpem_area_size
+        args.sharpen_area_size
     ).process()
