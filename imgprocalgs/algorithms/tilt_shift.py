@@ -120,7 +120,7 @@ def parse_args():
     parser.add_argument("--dest", type=str, help="Destination file path.", default='data/')
     parser.add_argument("--min_blur", type=float, help="Min blur factor")
     parser.add_argument("--max_blur", type=float, help="Max blur factor")
-    parser.add_argument("--sharpen_area_size", type=list, help="Sharpen area size")
+    parser.add_argument("--sharpen_area_size", type=int, nargs='+', default=[0, 0], help="Sharpen area size")
     return parser.parse_args()
 
 
