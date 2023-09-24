@@ -24,7 +24,8 @@ class TiltShift:
         self.pixels = self.input_image.pixels
 
         if not sharpen_area_size:
-            sharpen_area_size = [0, 0]
+            image_height = self.input_image.get_size()[1]
+            sharpen_area_size = [image_height // 3, image_height * 2 // 3]
 
         self.sharpen_min_h, self.sharpen_max_h = sharpen_area_size[0], sharpen_area_size[1]
         self.sharpen_size = self.sharpen_max_h - self.sharpen_min_h
